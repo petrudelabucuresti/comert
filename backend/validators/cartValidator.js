@@ -14,7 +14,13 @@ const updateCartValidator = [
   body("quantity").isInt({ min: 1 }),
 ];
 
+const removeFromCartValidator = [
+  body("sessionId").notEmpty().withMessage("Session ID is required"),
+  body("productId").notEmpty().withMessage("Product ID is required"),
+];
+
 module.exports = {
   addToCartValidator,
   updateCartValidator,
+  removeFromCartValidator
 };

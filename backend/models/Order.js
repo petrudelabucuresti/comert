@@ -1,13 +1,15 @@
 const createOrder = (data) => {
+  const now = new Date().toISOString();
+
   return {
     orderNumber: `ORD-${Date.now()}`,
-
     userId: data.userId || null,
 
     customer: {
       name: data.customer.name,
       email: data.customer.email,
       phone: data.customer.phone,
+      address: data.customer.address,
     },
 
     items: data.items,
@@ -22,7 +24,8 @@ const createOrder = (data) => {
 
     stripeSessionId: null,
 
-    createdAt: new Date().toISOString(),
+    createdAt: now,
+    updatedAt: now,
   };
 };
 

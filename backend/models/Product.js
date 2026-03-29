@@ -18,4 +18,4 @@ const createProduct = (data) => {
   };
 };
 
-module.exports = { createProduct };s
+module.exports = { createProduct };

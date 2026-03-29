@@ -11,6 +11,7 @@ const {
 const {
   addToCartValidator,
   updateCartValidator,
+  removeFromCartValidator
 } = require("../validators/cartValidator");
 
 const validate = require("../middleware/validateMiddleware");
@@ -25,6 +26,6 @@ router.post("/add", addToCartValidator, validate, addToCart);
 router.put("/update", updateCartValidator, validate, updateCart);
 
 // REMOVE
-router.delete("/remove", removeFromCart);
+router.delete("/remove", removeFromCartValidator, removeFromCart);
 
 module.exports = router;

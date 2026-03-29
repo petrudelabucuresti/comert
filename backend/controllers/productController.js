@@ -96,7 +96,92 @@ const getProductById = async (req, res, next) => {
   }
 };
 
+// CREATE PRODUCT (ADMIN)
+const createProductAdmin = async (req, res, next) => {
+  try {
+    const productData = req.body;
+
+    const productRef = db.collection("products").doc();
+
+    await productRef.set({
+      ...productData,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    });
+
+    res.status(201).json({
+      success: true,
+      message: "Product created",
+      data: {
+        id: productRef.id,
+        ...productData,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// UPDATE PRODUCT (ADMIN)
+const updateProductAdmin = async (req, res, next) => {
+  try {
+    const productId = req.params.id;
+    const updates = req.body;
+
+    const productRef = db.collection("products").doc(productId);
+    const productDoc = await productRef.get();
+
+    if (!productDoc.exists) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    await productRef.update({
+      ...updates,
+      updatedAt: new Date().toISOString(),
+    });
+
+    res.json({
+      success: true,
+      message: "Product updated",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// DELETE PRODUCT (ADMIN)
+const deleteProductAdmin = async (req, res, next) => {
+  try {
+    const productId = req.params.id;
+
+    const productRef = db.collection("products").doc(productId);
+    const productDoc = await productRef.get();
+
+    if (!productDoc.exists) {
+      return res.status(404).json({
+        success: false,
+        message: "Product not found",
+      });
+    }
+
+    await productRef.delete();
+
+    res.json({
+      success: true,
+      message: "Product deleted",
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   getProducts,
   getProductById,
+  createProductAdmin,
+  updateProductAdmin,
+  deleteProductAdmin,
 };

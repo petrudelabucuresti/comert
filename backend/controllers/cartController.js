@@ -62,6 +62,21 @@ const addToCart = async (req, res, next) => {
 
     const product = productDoc.data();
 
+
+    if (!product.isAvailable) {
+  return res.status(400).json({
+    success: false,
+    message: "Product is not available",
+  });
+}
+
+if (product.stock < quantity) {
+  return res.status(400).json({
+    success: false,
+    message: "Not enough stock available",
+  });
+}
+
     // caută cart
     const snapshot = await db
       .collection("carts")
@@ -80,19 +95,28 @@ const addToCart = async (req, res, next) => {
       items = snapshot.docs[0].data().items;
     }
 
-    const existingItem = items.find((i) => i.productId === productId);
+const existingItem = items.find((i) => i.productId === productId);
 
-    if (existingItem) {
-      existingItem.quantity += quantity;
-    } else {
-      items.push({
-        productId,
-        name: product.name,
-        price: product.price,
-        quantity,
-        image: product.images?.[0] || "",
-      });
-    }
+if (existingItem) {
+  const newQuantity = existingItem.quantity + quantity;
+
+  if (product.stock < newQuantity) {
+    return res.status(400).json({
+      success: false,
+      message: "Not enough stock available",
+    });
+  }
+
+  existingItem.quantity = newQuantity;
+} else {
+  items.push({
+    productId,
+    name: product.name,
+    price: product.price,
+    quantity,
+    image: product.images?.[0] || "",
+  });
+}
 
     const totals = calculateTotals(items);
 
@@ -136,11 +160,13 @@ const updateCart = async (req, res, next) => {
 
     let items = cartDoc.data().items;
 
-    items = items.map((item) =>
-      item.productId === productId
-        ? { ...item, quantity }
-        : item
-    );
+items = items
+  .map((item) =>
+    item.productId === productId
+      ? { ...item, quantity }
+      : item
+  )
+  .filter((item) => item.quantity > 0);
 
     const totals = calculateTotals(items);
 
