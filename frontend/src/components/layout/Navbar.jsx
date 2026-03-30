@@ -72,6 +72,12 @@ export default function Navbar() {
               <User size={18} />
             </Link>
             <Link
+            to="/register"
+            className="hidden rounded-full border border-black/10 bg-white px-4 py-2 text-sm font-semibold text-neutral-700 shadow-sm transition hover:-translate-y-0.5 hover:shadow md:inline-flex"
+            >
+            Register
+            </Link>
+            <Link
               to="/custom-cake"
               className="hidden rounded-full bg-[#A67C52] px-4 py-2 text-sm font-semibold text-white shadow-sm transition hover:-translate-y-0.5 hover:shadow md:inline-flex"
             >

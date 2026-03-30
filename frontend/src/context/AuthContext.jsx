@@ -9,10 +9,23 @@ export const AuthProvider = ({ children }) => {
 
   const loadUser = async () => {
     try {
+      const token = localStorage.getItem("token");
+
+      if (!token) {
+        setUser(null);
+        setLoading(false);
+        return null;
+      }
+
       const res = await getMe();
-      setUser(res.data);
-    } catch {
+      const currentUser = res.data;
+
+      setUser(currentUser);
+      return currentUser;
+    } catch (error) {
+      localStorage.removeItem("token");
       setUser(null);
+      return null;
     } finally {
       setLoading(false);
     }
@@ -28,7 +41,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, setUser, logout, loading }}>
+    <AuthContext.Provider value={{ user, setUser, logout, loading, loadUser }}>
       {children}
     </AuthContext.Provider>
   );
