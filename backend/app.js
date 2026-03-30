@@ -31,7 +31,7 @@ app.use(
   })
 );
 
-app.options("*", cors());
+// app.options("*", cors());
 app.use(morgan("dev"));
 
 app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
