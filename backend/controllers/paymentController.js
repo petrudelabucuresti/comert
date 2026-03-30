@@ -75,8 +75,8 @@ const createCheckoutSession = async (req, res, next) => {
         orderId,
         orderNumber: order.orderNumber,
       },
-      success_url: `http://localhost:5173/success?order=${order.orderNumber}`,
-      cancel_url: `http://localhost:5173/cancel?order=${order.orderNumber}`,
+     success_url: `${config.frontendUrl}/success?order=${order.orderNumber}`,
+cancel_url: `${config.frontendUrl}/cancel?order=${order.orderNumber}`,
     });
 
     await db.collection("orders").doc(orderId).update({

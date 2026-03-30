@@ -19,7 +19,16 @@ const errorHandler = require("./middleware/errorMiddleware");
 const app = express();
 
 app.use(helmet());
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      process.env.FRONTEND_URL,
+      "http://localhost:3000",
+      "http://localhost:5173",
+    ],
+    credentials: true,
+  })
+);
 app.use(morgan("dev"));
 
 app.use("/api/payments/webhook", express.raw({ type: "application/json" }));
